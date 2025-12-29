@@ -27,3 +27,6 @@ Thumbs.db
 
 # Debug
 *.log
+
+# Session progress
+progress.md

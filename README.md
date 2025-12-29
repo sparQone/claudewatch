@@ -41,21 +41,22 @@ Without structure, AI-assisted development often becomes chaotic: context gets l
 
 ## Installation
 
-> **Note**: Only tested on macOS. Windows and Linux builds are provided but untested—contributions welcome!
+> **Note**: Only tested on macOS. Windows build provided but untested. Linux requires building from source on a Linux machine—contributions welcome!
 
-### Prerequisites
+### Pre-built Binaries
 
-1. **Go 1.21+** - [Download Go](https://go.dev/dl/)
-2. **Wails CLI** - Install with:
-   ```bash
-   go install github.com/wailsapp/wails/v2/cmd/wails@latest
-   ```
-3. **Platform dependencies**:
-   - **macOS**: Xcode command line tools (`xcode-select --install`)
-   - **Windows**: WebView2 (usually pre-installed on Windows 10/11)
-   - **Linux**: `sudo apt install libgtk-3-dev libwebkit2gtk-4.0-dev`
+Download from the `releases/` folder:
+- **macOS**: `claude-watch-macos.zip` (Universal - Intel + Apple Silicon)
+- **Windows**: `claude-watch-windows.zip`
 
-### Build
+### Build from Source
+
+**Prerequisites:**
+- [Go 1.21+](https://go.dev/dl/)
+- [Wails CLI](https://wails.io/docs/gettingstarted/installation): `go install github.com/wailsapp/wails/v2/cmd/wails@latest`
+- **macOS**: Xcode command line tools (`xcode-select --install`)
+- **Windows**: WebView2 (usually pre-installed on Windows 10/11)
+- **Linux**: `sudo apt install libgtk-3-dev libwebkit2gtk-4.0-dev`
 
 ```bash
 # Clone or download this project
@@ -81,7 +82,7 @@ make install-mac
 ## Usage
 
 1. **Launch the app** - Double-click `claude-watch.app` (macOS) or `claude-watch.exe` (Windows)
-2. **Position the window** - Drag to your preferred corner (top-right recommended)
+2. **Window auto-positions** - Opens in the top-right corner (drag to reposition if needed)
 3. **Work normally** - The app monitors all Claude Code sessions in the background
 4. **Get alerted** - At 75% and 90% context, you'll receive:
    - System notification
