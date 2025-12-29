@@ -12,7 +12,7 @@ When working with AI coding assistants on complex tasks, context management beco
 
 When you get the warning, tell Claude:
 
-**Write everything we did so far to progress.md, ensure to note the approach we're taking, the steps we've done so far, and the current failure we're working on.**
+*Write everything we did so far to progress.md, ensure to note the approach we're taking, the steps we've done so far, and the current failure we're working on.*
 
 ### The RPI Framework
 
