@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Watch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Claude Watch</h1>
+            <span class="status" id="status">Scanning...</span>
+        </header>
+        
+        <div id="sessions" class="sessions">
+            <!-- Sessions will be populated here -->
+        </div>
+
+        <footer>
+            <span id="lastUpdate">--</span>
+            <button onclick="resetAlerts()" title="Reset alert history">🔔</button>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

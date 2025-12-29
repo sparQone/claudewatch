@@ -1,0 +1,187 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    min-height: 100vh;
+    font-size: 13px;
+}
+
+.container {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #333;
+}
+
+header h1 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.status {
+    font-size: 11px;
+    color: #888;
+}
+
+.sessions {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+}
+
+.session {
+    background: #242424;
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px solid #333;
+}
+
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.project-name {
+    font-weight: 500;
+    color: #fff;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+.percentage {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.progress-container {
+    background: #333;
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.session-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 10px;
+    color: #777;
+}
+
+/* Color states */
+.state-good .percentage { color: #4ade80; }
+.state-good .progress-bar { background: linear-gradient(90deg, #22c55e, #4ade80); }
+
+.state-warning .percentage { color: #fbbf24; }
+.state-warning .progress-bar { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+.state-danger .percentage { color: #f87171; }
+.state-danger .progress-bar { background: linear-gradient(90deg, #dc2626, #f87171); }
+
+.state-critical .percentage { color: #ff4444; }
+.state-critical .progress-bar { 
+    background: linear-gradient(90deg, #b91c1c, #ff4444);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-state .icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.empty-state p {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #333;
+    font-size: 10px;
+    color: #666;
+}
+
+footer button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+footer button:hover {
+    opacity: 1;
+}
+
+/* Scrollbar styling */
+.sessions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sessions::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.sessions::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 3px;
+}
+
+.sessions::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Drag region for frameless window */
+header {
+    -webkit-app-region: drag;
+}
+
+header button, footer button {
+    -webkit-app-region: no-drag;
+}
