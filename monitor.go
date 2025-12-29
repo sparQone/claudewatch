@@ -208,12 +208,14 @@ func (m *Monitor) parseSession(filePath, projectDir string) *SessionInfo {
 // cleanProjectName converts the directory name to a readable project name
 // Claude stores paths like "-Users-asim-code-my-project" (slashes become dashes)
 func cleanProjectName(dirName string) string {
-	// Common path segments to find and skip past
+	// Find the last occurrence of a common path marker and take everything after it
+	// e.g., "-Users-asim-code-sparqone-sparq" -> "sparqone-sparq"
+	// e.g., "-Users-asim-code-claude-watch" -> "claude-watch"
+
 	markers := []string{"-code-", "-projects-", "-repos-", "-src-", "-dev-", "-workspace-"}
 
 	name := dirName
 
-	// Find the last occurrence of a marker and take everything after it
 	for _, marker := range markers {
 		if idx := strings.LastIndex(strings.ToLower(name), strings.ToLower(marker)); idx != -1 {
 			name = name[idx+len(marker):]
@@ -221,19 +223,21 @@ func cleanProjectName(dirName string) string {
 		}
 	}
 
-	// If no marker found, try to skip past -Users-username- pattern
-	if name == dirName {
-		if idx := strings.Index(name, "-Users-"); idx != -1 {
-			// Skip -Users-username- (find the third dash after Users)
-			rest := name[idx+7:] // skip "-Users-"
-			if dashIdx := strings.Index(rest, "-"); dashIdx != -1 {
-				name = rest[dashIdx+1:]
-			}
-		}
-	}
-
-	// Clean up leading/trailing dashes and replace remaining dashes with hyphens
+	// Clean up and take just the last segment (project folder)
 	name = strings.Trim(name, "-")
+
+	// If there's still a dash, take only the last part (the actual project name)
+	// "sparqone-sparq" -> "sparq", but "claude-watch" should stay as is
+	// Heuristic: if the part after the last dash exists as a prefix too, it's a nested folder
+	if lastDash := strings.LastIndex(name, "-"); lastDash != -1 {
+		prefix := name[:lastDash]
+		suffix := name[lastDash+1:]
+		// If suffix appears in prefix (like sparqone contains sparq), it's nested
+		if strings.Contains(strings.ToLower(prefix), strings.ToLower(suffix)) {
+			name = suffix
+		}
+		// Otherwise keep the full name (like claude-watch)
+	}
 
 	// Truncate if too long
 	if len(name) > 30 {
