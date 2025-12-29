@@ -206,41 +206,42 @@ func (m *Monitor) parseSession(filePath, projectDir string) *SessionInfo {
 }
 
 // cleanProjectName converts the directory name to a readable project name
+// Claude stores paths like "-Users-asim-code-my-project" (slashes become dashes)
 func cleanProjectName(dirName string) string {
-	// Remove common prefixes like "-Users-username-"
-	parts := strings.Split(dirName, "-")
+	// Common path segments to find and skip past
+	markers := []string{"-code-", "-projects-", "-repos-", "-src-", "-dev-", "-workspace-"}
 
-	// Find where the actual project path starts (after Users/username or similar)
-	startIdx := 0
-	for i, part := range parts {
-		if part == "code" || part == "projects" || part == "repos" || part == "src" || part == "dev" {
-			startIdx = i
+	name := dirName
+
+	// Find the last occurrence of a marker and take everything after it
+	for _, marker := range markers {
+		if idx := strings.LastIndex(strings.ToLower(name), strings.ToLower(marker)); idx != -1 {
+			name = name[idx+len(marker):]
 			break
 		}
-		// Skip common path parts
-		if part == "" || part == "Users" || part == "home" || len(part) <= 2 {
-			startIdx = i + 1
+	}
+
+	// If no marker found, try to skip past -Users-username- pattern
+	if name == dirName {
+		if idx := strings.Index(name, "-Users-"); idx != -1 {
+			// Skip -Users-username- (find the third dash after Users)
+			rest := name[idx+7:] // skip "-Users-"
+			if dashIdx := strings.Index(rest, "-"); dashIdx != -1 {
+				name = rest[dashIdx+1:]
+			}
 		}
 	}
 
-	if startIdx >= len(parts) {
-		startIdx = 0
-	}
-
-	// Take last 2-3 meaningful parts
-	relevantParts := parts[startIdx:]
-	if len(relevantParts) > 3 {
-		relevantParts = relevantParts[len(relevantParts)-3:]
-	}
-
-	name := strings.Join(relevantParts, "/")
-	if name == "" {
-		name = dirName
-	}
+	// Clean up leading/trailing dashes and replace remaining dashes with hyphens
+	name = strings.Trim(name, "-")
 
 	// Truncate if too long
 	if len(name) > 30 {
 		name = "..." + name[len(name)-27:]
+	}
+
+	if name == "" {
+		return dirName
 	}
 
 	return name
