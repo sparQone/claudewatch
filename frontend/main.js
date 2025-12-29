@@ -1,5 +1,5 @@
 // Update interval in milliseconds
-const UPDATE_INTERVAL = 5000;
+const UPDATE_INTERVAL = 2000;
 
 // Format token count (e.g., 133000 -> "133k")
 function formatTokens(tokens) {

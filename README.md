@@ -4,10 +4,32 @@ A lightweight, cross-platform desktop app that monitors Claude Code context usag
 
 ![Claude Watch Screenshot](screenshot.png)
 
+## Why?
+
+When working with AI coding assistants on complex tasks, context management becomes critical. Claude Code has a ~200k token context window, and when it fills up, Claude automatically compacts the conversation—often losing important details you wanted to preserve.
+
+**Claude Watch** gives you visibility into your context usage across all active sessions, so you can intentionally save your work before Claude does it for you.
+
+### The RPI Framework
+
+This tool pairs well with the **Research-Plan-Implement (RPI) Framework**—a structured methodology for working with Claude Code:
+
+| Phase | Purpose |
+|-------|---------|
+| **Research** | Deeply understand the codebase before making changes |
+| **Plan** | Create detailed, validated implementation plans |
+| **Implement** | Execute plans methodically, phase by phase |
+
+Without structure, AI-assisted development often becomes chaotic: context gets lost between sessions, no clear methodology for multi-file changes, and painful handoffs when stopping mid-task.
+
+**Learn more:**
+- [Watch the RPI methodology video](https://www.youtube.com/watch?v=rmvDxxNubIg)
+- [RPI Framework for Claude Code](https://github.com/acampb/claude-rpi-framework)
+
 ## Features
 
 - 🖥️ **Floating window** - Always on top, stays visible while you work
-- 📊 **Real-time monitoring** - Updates every 5 seconds
+- 📊 **Real-time monitoring** - Updates every 2 seconds
 - 🔔 **Smart alerts** - Notification + sound at 75% and 90% context usage
 - 🌍 **Cross-platform** - Works on macOS, Windows, and Linux
 - 🚀 **Lightweight** - ~10MB binary, minimal resource usage
@@ -73,7 +95,7 @@ Currently, configuration is done by editing the source:
 
 | Setting | Location | Default |
 |---------|----------|---------|
-| Update interval | `frontend/main.js` | 5000ms |
+| Update interval | `frontend/main.js` | 2000ms |
 | Active session cutoff | `monitor.go` | 60 minutes |
 | Max projects shown | `monitor.go` | 10 |
 | Context limit | `monitor.go` | 200,000 tokens |
