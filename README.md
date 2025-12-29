@@ -10,6 +10,10 @@ When working with AI coding assistants on complex tasks, context management beco
 
 **Claude Watch** gives you visibility into your context usage across all active sessions, so you can intentionally save your work before Claude does it for you.
 
+When you get the warning, tell Claude:
+
+**Write everything we did so far to progress.md, ensure to note the approach we're taking, the steps we've done so far, and the current failure we're working on.**
+
 ### The RPI Framework
 
 This tool pairs well with the **Research-Plan-Implement (RPI) Framework**—a structured methodology for working with Claude Code:
@@ -36,6 +40,8 @@ Without structure, AI-assisted development often becomes chaotic: context gets l
 - 📁 **Multi-project** - Monitors all active Claude Code sessions automatically
 
 ## Installation
+
+> **Note**: Only tested on macOS. Windows and Linux builds are provided but untested—contributions welcome!
 
 ### Prerequisites
 

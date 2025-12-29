@@ -10,7 +10,6 @@ dist/
 *.dylib
 *.test
 *.out
-go.sum
 
 # Wails
 frontend/dist/
