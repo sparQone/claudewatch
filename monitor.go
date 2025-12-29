@@ -36,6 +36,7 @@ type Monitor struct {
 // Message structures for parsing JSONL
 type AssistantMessage struct {
 	Type    string `json:"type"`
+	Cwd     string `json:"cwd"`
 	Message struct {
 		Usage *Usage `json:"usage"`
 	} `json:"message"`
@@ -160,6 +161,7 @@ func (m *Monitor) parseSession(filePath, projectDir string) *SessionInfo {
 
 	var totalOutputTokens int
 	var lastUsage *Usage
+	var cwd string
 
 	scanner := bufio.NewScanner(file)
 	// Increase buffer size for large lines
@@ -170,6 +172,11 @@ func (m *Monitor) parseSession(filePath, projectDir string) *SessionInfo {
 		var msg AssistantMessage
 		if err := json.Unmarshal(scanner.Bytes(), &msg); err != nil {
 			continue
+		}
+
+		// Capture cwd from the first message that has it
+		if cwd == "" && msg.Cwd != "" {
+			cwd = msg.Cwd
 		}
 
 		if msg.Type == "assistant" && msg.Message.Usage != nil {
@@ -195,9 +202,15 @@ func (m *Monitor) parseSession(filePath, projectDir string) *SessionInfo {
 		percentage = 100
 	}
 
+	// Use folder name from cwd if available, otherwise fall back to directory name
+	projectName := filepath.Base(cwd)
+	if projectName == "" || projectName == "." {
+		projectName = projectDir
+	}
+
 	return &SessionInfo{
 		ID:          filepath.Base(filePath),
-		ProjectName: cleanProjectName(projectDir),
+		ProjectName: projectName,
 		ProjectPath: projectDir,
 		UsedTokens:  totalUsed,
 		FreeTokens:  freeTokens,
@@ -205,48 +218,3 @@ func (m *Monitor) parseSession(filePath, projectDir string) *SessionInfo {
 	}
 }
 
-// cleanProjectName converts the directory name to a readable project name
-// Claude stores paths like "-Users-asim-code-my-project" (slashes become dashes)
-func cleanProjectName(dirName string) string {
-	// Find the last occurrence of a common path marker and take everything after it
-	// e.g., "-Users-asim-code-sparqone-sparq" -> "sparqone-sparq"
-	// e.g., "-Users-asim-code-claude-watch" -> "claude-watch"
-
-	markers := []string{"-code-", "-projects-", "-repos-", "-src-", "-dev-", "-workspace-"}
-
-	name := dirName
-
-	for _, marker := range markers {
-		if idx := strings.LastIndex(strings.ToLower(name), strings.ToLower(marker)); idx != -1 {
-			name = name[idx+len(marker):]
-			break
-		}
-	}
-
-	// Clean up and take just the last segment (project folder)
-	name = strings.Trim(name, "-")
-
-	// If there's still a dash, take only the last part (the actual project name)
-	// "sparqone-sparq" -> "sparq", but "claude-watch" should stay as is
-	// Heuristic: if the part after the last dash exists as a prefix too, it's a nested folder
-	if lastDash := strings.LastIndex(name, "-"); lastDash != -1 {
-		prefix := name[:lastDash]
-		suffix := name[lastDash+1:]
-		// If suffix appears in prefix (like sparqone contains sparq), it's nested
-		if strings.Contains(strings.ToLower(prefix), strings.ToLower(suffix)) {
-			name = suffix
-		}
-		// Otherwise keep the full name (like claude-watch)
-	}
-
-	// Truncate if too long
-	if len(name) > 30 {
-		name = "..." + name[len(name)-27:]
-	}
-
-	if name == "" {
-		return dirName
-	}
-
-	return name
-}
