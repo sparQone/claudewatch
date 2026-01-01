@@ -159,7 +159,6 @@ func (m *Monitor) parseSession(filePath, projectDir string) *SessionInfo {
 	}
 	defer file.Close()
 
-	var totalOutputTokens int
 	var lastUsage *Usage
 	var cwd string
 
@@ -180,7 +179,6 @@ func (m *Monitor) parseSession(filePath, projectDir string) *SessionInfo {
 		}
 
 		if msg.Type == "assistant" && msg.Message.Usage != nil {
-			totalOutputTokens += msg.Message.Usage.OutputTokens
 			lastUsage = msg.Message.Usage
 		}
 	}
@@ -189,9 +187,8 @@ func (m *Monitor) parseSession(filePath, projectDir string) *SessionInfo {
 		return nil
 	}
 
-	// Calculate total context usage
-	currentInput := lastUsage.InputTokens + lastUsage.CacheReadInputTokens + lastUsage.CacheCreationInputTokens
-	totalUsed := totalOutputTokens + currentInput
+	// Calculate context usage (matches official Claude Code status bar hook)
+	totalUsed := lastUsage.InputTokens + lastUsage.CacheReadInputTokens + lastUsage.CacheCreationInputTokens
 	percentage := (totalUsed * 100) / MaxContextTokens
 	freeTokens := MaxContextTokens - totalUsed
 
